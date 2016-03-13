@@ -2,8 +2,10 @@
 
 [![Build status](https://travis-ci.org/DEAP/deap.svg?branch=master)](https://travis-ci.org/DEAP/deap) [![Download](https://img.shields.io/pypi/dm/deap.svg)](https://pypi.python.org/pypi/deap) [![Join the chat at https://gitter.im/DEAP/deap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DEAP/deap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-DEAP is a novel evolutionary computation framework for rapid prototyping and testing of 
+DEAP is a novel evolutionary computation framework for rapid prototyping and testing of
 ideas. It seeks to make algorithms explicit and data structures transparent. It works in perfect harmony with parallelisation mechanism such as multiprocessing and [SCOOP](http://pyscoop.org).
+
+* FORK Info: This is a fork by [cbouyio](https://github.com/cbouyio) to include a monophyletic (i.e. a clone and not sexually reproducing) population for the genetic algorithms implementations of the original DEAP. (highly experimental and not documented in a complete way.)
 
 DEAP includes the following features:
 
@@ -14,6 +16,7 @@ DEAP includes the following features:
     * Automatically defined functions
   * Evolution strategies (including CMA-ES)
   * Multi-objective optimisation (NSGA-II, SPEA2, MO-CMA-ES)
+    * Introduction of monophyletic population, and relevant functions.
   * Co-evolution (cooperative and competitive) of multiple populations
   * Parallelization of the evaluations (and more)
   * Hall of Fame of the best individuals that lived in the population
@@ -102,7 +105,7 @@ top10 = tools.selBest(population, k=10)
 Authors of scientific papers including results generated using DEAP are encouraged to cite the following paper.
 
 ```xml
-@article{DEAP_JMLR2012, 
+@article{DEAP_JMLR2012,
     author    = " F\'elix-Antoine Fortin and Fran\c{c}ois-Michel {De Rainville} and Marc-Andr\'e Gardner and Marc Parizeau and Christian Gagn\'e ",
     title     = { {DEAP}: Evolutionary Algorithms Made Easy },
     pages    = { 2171--2175 },
@@ -128,7 +131,7 @@ Authors of scientific papers including results generated using DEAP are encourag
   * Marc-André Gardner, Christian Gagné, and Marc Parizeau. Estimation of Distribution Algorithm based on Hidden Markov Models for Combinatorial Optimization. in Comp. Proc. Genetic and Evolutionary Computation Conference (GECCO 2013), July 2013.
   * J. T. Zhai, M. A. Bamakhrama, and T. Stefanov. "Exploiting Just-enough Parallelism when Mapping Streaming Applications in Hard Real-time Systems". Design Automation Conference (DAC 2013), 2013.
   * V. Akbarzadeh, C. Gagné, M. Parizeau, M. Argany, M. A Mostafavi, "Probabilistic Sensing Model for Sensor Placement Optimization Based on Line-of-Sight Coverage", Accepted in IEEE Transactions on Instrumentation and Measurement, 2012.
-  * M. Reif, F. Shafait, and A. Dengel. "Dataset Generation for Meta-Learning". Proceedings of the German Conference on Artificial Intelligence (KI'12). 2012. 
+  * M. Reif, F. Shafait, and A. Dengel. "Dataset Generation for Meta-Learning". Proceedings of the German Conference on Artificial Intelligence (KI'12). 2012.
   * M. T. Ribeiro, A. Lacerda, A. Veloso, and N. Ziviani. "Pareto-Efficient Hybridization for Multi-Objective Recommender Systems". Proceedings of the Conference on Recommanders Systems (!RecSys'12). 2012.
   * M. Pérez-Ortiz, A. Arauzo-Azofra, C. Hervás-Martínez, L. García-Hernández and L. Salas-Morera. "A system learning user preferences for multiobjective optimization of facility layouts". Pr,oceedings on the Int. Conference on Soft Computing Models in Industrial and Environmental Applications (SOCO'12). 2012.
   * Lévesque, J.C., Durand, A., Gagné, C., and Sabourin, R., Multi-Objective Evolutionary Optimization for Generating Ensembles of Classifiers in the ROC Space, Genetic and Evolutionary Computation Conference (GECCO 2012), 2012.
