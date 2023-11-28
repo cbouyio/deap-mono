@@ -91,18 +91,18 @@ def test_nsga2():
         ind.fitness.values = fit
 
     pop = toolbox.select(pop, len(pop))
-    for gen in range(1, NGEN):
+    for _ in range(1, NGEN):
         offspring = tools.selTournamentDCD(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
-        
+
         for ind1, ind2 in zip(offspring[::2], offspring[1::2]):
             if random.random() <= 0.9:
                 toolbox.mate(ind1, ind2)
-            
+
             toolbox.mutate(ind1)
             toolbox.mutate(ind2)
             del ind1.fitness.values, ind2.fitness.values
-        
+
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
@@ -132,9 +132,7 @@ def test_mo_cma_es():
 
     def valid(individual):
         """Determines if the individual is valid or not."""
-        if any(individual < BOUND_LOW) or any(individual > BOUND_UP):
-            return False
-        return True
+        return not any(individual < BOUND_LOW) and not any(individual > BOUND_UP)
 
     NDIM = 5
     BOUND_LOW, BOUND_UP = 0.0, 1.0
@@ -152,7 +150,7 @@ def test_mo_cma_es():
         ind.fitness.values = toolbox.evaluate(ind)
 
     strategy = cma.StrategyMultiObjective(population, sigma=1.0, mu=MU, lambda_=LAMBDA)
-    
+
     toolbox.register("generate", strategy.generate, creator.__dict__[INDCLSNAME])
     toolbox.register("update", strategy.update)
 
@@ -164,9 +162,9 @@ def test_mo_cma_es():
         fitnesses = toolbox.map(toolbox.evaluate, population)
         for ind, fit in zip(population, fitnesses):
             ind.fitness.values = fit
-        
+
         # Update the strategy with the evaluated individuals
         toolbox.update(population)
-    
+
     hv = hypervolume(strategy.parents, [11.0, 11.0])
     assert hv > HV_THRESHOLD, "Hypervolume is lower than expected %f < %f" % (hv, HV_THRESHOLD)

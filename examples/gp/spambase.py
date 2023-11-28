@@ -32,7 +32,7 @@ from deap import gp
 # http://beagle.gel.ulaval.ca/refmanual/beagle/html/d2/dbe/group__Spambase.html
 with open("spambase.csv") as spambase:
     spamReader = csv.reader(spambase)
-    spam = list(list(float(elem) for elem in row) for row in spamReader)
+    spam = [[float(elem) for elem in row] for row in spamReader]
 
 # defined a new primitive set for strongly typed GP
 pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 57), bool, "IN")
@@ -56,8 +56,7 @@ pset.addPrimitive(protectedDiv, [float,float], float)
 # logic operators
 # Define a new if-then-else function
 def if_then_else(input, output1, output2):
-    if input: return output1
-    else: return output2
+    return output1 if input else output2
 
 pset.addPrimitive(operator.lt, [float, float], bool)
 pset.addPrimitive(operator.eq, [float, float], bool)

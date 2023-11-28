@@ -51,7 +51,7 @@ toolbox.register("map", futures.map)
 def main():
     random.seed(64)
     NISLES = 5
-    islands = [toolbox.population(n=300) for i in range(NISLES)]
+    islands = [toolbox.population(n=300) for _ in range(NISLES)]
 
     # Unregister unpicklable methods before sending the toolbox.
     toolbox.unregister("attr_bool")
@@ -61,7 +61,7 @@ def main():
     NGEN, FREQ = 40, 5
     toolbox.register("algorithm", algorithms.eaSimple, toolbox=toolbox, 
                      cxpb=0.5, mutpb=0.2, ngen=FREQ, verbose=False)
-    for i in range(0, NGEN, FREQ):
+    for _ in range(0, NGEN, FREQ):
         results = toolbox.map(toolbox.algorithm, islands)
         islands = [pop for pop, logbook in results]
         tools.migRing(islands, 15, tools.selBest)

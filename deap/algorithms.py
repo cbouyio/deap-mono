@@ -119,13 +119,10 @@ def varOrMono(population, toolbox, lambda_, cxpb, mutpb):
     if op_choice < cxpb:  # Apply crossover
       ind = toolbox.mate(ind)
       del ind.fitness.values
-      offspring.append(ind)
     elif op_choice < cxpb + mutpb:  # Apply mutation
       ind = toolbox.mutate(ind)
       del ind.fitness.values
-      offspring.append(ind)
-    else:  # Apply reproduction
-      offspring.append(ind)
+    offspring.append(ind)
   return offspring
 
 

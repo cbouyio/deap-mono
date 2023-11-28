@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'DEAP'
-copyright = u'2009-%s, DEAP Project' % time.strftime('%Y')
+copyright = f"2009-{time.strftime('%Y')}, DEAP Project"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

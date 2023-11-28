@@ -76,9 +76,9 @@ class Pickling(unittest.TestCase):
         ind.fitness.values = (1.0,)
         ind_s = pickle.dumps(ind, pickle.HIGHEST_PROTOCOL)
         ind_l = pickle.loads(ind_s)
-        msg =  "Unpickled individual %s != pickled individual %s" % (str(ind), str(ind_l))
+        msg = f"Unpickled individual {str(ind)} != pickled individual {str(ind_l)}"
         self.assertEqual(ind, ind_l, msg)
-        msg =  "Unpickled fitness %s != pickled fitness %s" % (str(ind.fitness), str(ind_l.fitness))
+        msg = f"Unpickled fitness {str(ind.fitness)} != pickled fitness {str(ind_l.fitness)}"
         self.assertEqual(ind.fitness, ind_l.fitness, msg)
 
     def test_pickle_tree_term(self):
@@ -91,9 +91,9 @@ class Pickling(unittest.TestCase):
         ind.fitness.values = (1.0,)
         ind_s = pickle.dumps(ind, pickle.HIGHEST_PROTOCOL)
         ind_l = pickle.loads(ind_s)
-        msg =  "Unpickled individual %s != pickled individual %s" % (str(ind), str(ind_l))
+        msg = f"Unpickled individual {str(ind)} != pickled individual {str(ind_l)}"
         self.assertEqual(ind, ind_l, msg)
-        msg =  "Unpickled fitness %s != pickled fitness %s" % (str(ind.fitness), str(ind_l.fitness))
+        msg = f"Unpickled fitness {str(ind.fitness)} != pickled fitness {str(ind_l.fitness)}"
         self.assertEqual(ind.fitness, ind_l.fitness, msg)
 
     def test_pickle_tree_ephemeral(self):
@@ -106,9 +106,9 @@ class Pickling(unittest.TestCase):
         ind.fitness.values = (1.0,)
         ind_s = pickle.dumps(ind, pickle.HIGHEST_PROTOCOL)
         ind_l = pickle.loads(ind_s)
-        msg =  "Unpickled individual %s != pickled individual %s" % (str(ind), str(ind_l))
+        msg = f"Unpickled individual {str(ind)} != pickled individual {str(ind_l)}"
         self.assertEqual(ind, ind_l, msg)
-        msg =  "Unpickled fitness %s != pickled fitness %s" % (str(ind.fitness), str(ind_l.fitness))
+        msg = f"Unpickled fitness {str(ind.fitness)} != pickled fitness {str(ind_l.fitness)}"
         self.assertEqual(ind.fitness, ind_l.fitness, msg)
 
     def test_pickle_population(self):

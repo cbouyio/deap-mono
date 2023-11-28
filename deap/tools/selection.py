@@ -20,7 +20,7 @@ def selRandom(individuals, k):
     This function uses the :func:`~random.choice` function from the
     python base :mod:`random` module.
     """
-    return [random.choice(individuals) for i in xrange(k)]
+    return [random.choice(individuals) for _ in xrange(k)]
 
 
 def selBest(individuals, k):
@@ -59,7 +59,7 @@ def selTournament(individuals, k, tournsize):
     :mod:`random` module.
     """
     chosen = []
-    for i in xrange(k):
+    for _ in xrange(k):
         aspirants = selRandom(individuals, tournsize)
         chosen.append(max(aspirants, key=attrgetter("fitness")))
     return chosen
@@ -83,9 +83,9 @@ def selRoulette(individuals, k):
     """
     s_inds = sorted(individuals, key=attrgetter("fitness"), reverse=True)
     sum_fits = sum(ind.fitness.values[0] for ind in individuals)
-    
+
     chosen = []
-    for i in xrange(k):
+    for _ in xrange(k):
         u = random.random() * sum_fits
         sum_ = 0
         for ind in s_inds:
@@ -93,7 +93,7 @@ def selRoulette(individuals, k):
             if sum_ > u:
                 chosen.append(ind)
                 break
-    
+
     return chosen
 
 

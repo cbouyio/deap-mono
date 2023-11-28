@@ -37,10 +37,10 @@ def genWire(dimension):
 
 def genNetwork(dimension, min_size, max_size):
     size = random.randint(min_size, max_size)
-    return [genWire(dimension) for i in range(size)]
+    return [genWire(dimension) for _ in range(size)]
 
 def getParasite(dimension):
-    return [random.choice((0, 1)) for i in range(dimension)]
+    return [random.choice((0, 1)) for _ in range(dimension)]
 
 def mutNetwork(individual, dimension, mutpb, addpb, delpb, indpb):
     if random.random() < mutpb:

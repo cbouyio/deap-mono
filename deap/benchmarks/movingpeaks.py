@@ -177,13 +177,15 @@ class MovingPeaks:
 
     def globalMaximum(self):
         """Returns the global maximum value and position."""
-        # The global maximum is at one peak's position
-        potential_max = list()
-        for func, pos, height, width in zip(self.peaks_function,
-                                            self.peaks_position,
-                                            self.peaks_height,
-                                            self.peaks_width):
-            potential_max.append((func(pos, pos, height, width), pos))
+        potential_max = [
+            (func(pos, pos, height, width), pos)
+            for func, pos, height, width in zip(
+                self.peaks_function,
+                self.peaks_position,
+                self.peaks_height,
+                self.peaks_width,
+            )
+        ]
         return max(potential_max)
     
     def maximums(self):
@@ -192,7 +194,7 @@ class MovingPeaks:
         """
         # The maximums are at the peaks position but might be swallowed by 
         # other peaks
-        maximums = list()
+        maximums = []
         for func, pos, height, width in zip(self.peaks_function,
                                             self.peaks_position,
                                             self.peaks_height,
@@ -211,14 +213,15 @@ class MovingPeaks:
                       the total evaluation count. (Defaults to
                       :data:`True`)
         """
-        possible_values = []
-        
-        for func, pos, height, width in zip(self.peaks_function,
-                                            self.peaks_position,
-                                            self.peaks_height,
-                                            self.peaks_width):
-            possible_values.append(func(individual, pos, height, width))
-        
+        possible_values = [
+            func(individual, pos, height, width)
+            for func, pos, height, width in zip(
+                self.peaks_function,
+                self.peaks_position,
+                self.peaks_height,
+                self.peaks_width,
+            )
+        ]
         if self.basis_function:
             possible_values.append(self.basis_function(individual))
 
@@ -236,7 +239,7 @@ class MovingPeaks:
             # We exausted the number of evaluation, change peaks for the next one.
             if self.period > 0 and self.nevals % self.period == 0:
                 self.changePeaks()
-        
+
         return fitness,
     
     def offlineError(self):
@@ -256,7 +259,7 @@ class MovingPeaks:
                 # Remove n peaks or less depending on the minimum number of peaks
                 u = self.random.random()
                 n = min(npeaks - self.minpeaks, int(round(r * u * self.number_severity)))
-                for i in range(n):
+                for _ in range(n):
                     idx = self.random.randrange(len(self.peaks_function))
                     self.peaks_function.pop(idx)
                     self.peaks_position.pop(idx)
@@ -267,7 +270,7 @@ class MovingPeaks:
                 # Add n peaks or less depending on the maximum number of peaks
                 u = self.random.random()
                 n = min(self.maxpeaks - npeaks, int(round(r * u * self.number_severity)))
-                for i in range(n):
+                for _ in range(n):
                     self.peaks_function.append(self.random.choice(self.pfunc_pool))
                     self.peaks_position.append([self.random.uniform(self.min_coord, self.max_coord) for _ in range(self.dim)])
                     self.peaks_height.append(self.random.uniform(self.min_height, self.max_height))
@@ -279,15 +282,15 @@ class MovingPeaks:
             shift = [self.random.random() - 0.5 for _ in range(len(self.peaks_position[i]))]
             shift_length = sum(s**2 for s in shift)
             shift_length = self.move_severity / math.sqrt(shift_length) if shift_length > 0 else 0
-            
+
             shift = [shift_length * (1.0 - self.lambda_) * s \
-                     + self.lambda_ * c for s, c in zip(shift, self.last_change_vector[i])]
-            
+                         + self.lambda_ * c for s, c in zip(shift, self.last_change_vector[i])]
+
             shift_length = sum(s**2 for s in shift)
             shift_length = self.move_severity / math.sqrt(shift_length) if shift_length > 0 else 0
 
             shift = [s*shift_length for s in shift]
-            
+
             new_position = []
             final_shift = []
             for pp, s in zip(self.peaks_position[i], shift):

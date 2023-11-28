@@ -31,13 +31,10 @@ NBR_ITEMS = 20
 # dict initialization. It is also seeded in main().
 random.seed(64)
 
-# Create the item dictionary: item name is an integer, and value is 
-# a (weight, value) 2-uple.
-items = {}
-# Create random items and store them in the items' dictionary.
-for i in range(NBR_ITEMS):
-    items[i] = (random.randint(1, 10), random.uniform(0, 100))
-
+items = {
+    i: (random.randint(1, 10), random.uniform(0, 100))
+    for i in range(NBR_ITEMS)
+}
 creator.create("Fitness", base.Fitness, weights=(-1.0, 1.0))
 creator.create("Individual", set, fitness=creator.Fitness)
 

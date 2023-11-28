@@ -34,9 +34,9 @@ K=1
 # Read data from file
 with open(FILE, "r") as data_csv:
     data = csv.reader(data_csv)
-    trainset = list()
-    trainlabels = list()
-    rows = [row for row in data]
+    trainset = []
+    trainlabels = []
+    rows = list(data)
 
 random.shuffle(rows)
 for row in rows:

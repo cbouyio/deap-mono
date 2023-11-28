@@ -49,12 +49,12 @@ def test_array():
     creator.create(CNAME, array.array, typecode="i")
     a = creator.__dict__[CNAME]([1,2,3,4])
     b = creator.__dict__[CNAME]([5,6,7,8])
-    
+
     a[1:3], b[1:3] = b[1:3], a[1:3]
     ta = array.array("i", [1,6,7,4])
     tb = array.array("i", [5,2,3,8])
-    assert a == ta, "%s, expected %s" % (a, ta)
-    assert b == tb, "%s, expected %s" % (b, tb)
+    assert a == ta, f"{a}, expected {ta}"
+    assert b == tb, f"{b}, expected {tb}"
 
 @skipIf(not numpy, "Cannot import Numpy numerical library")
 @with_setup(None, teardown_func)
@@ -62,12 +62,12 @@ def test_numpy_nocopy():
     creator.create(CNAME, numpy.ndarray)
     a = creator.__dict__[CNAME]([1,2,3,4])
     b = creator.__dict__[CNAME]([5,6,7,8])
-    
+
     a[1:3], b[1:3] = b[1:3], a[1:3]
     ta = numpy.array([1,6,7,4])
     tb = numpy.array([5,6,7,8])
-    assert all(a == ta), "%s, expected %s" % (a, ta)
-    assert all(b == tb), "%s, expected %s" % (b, tb)
+    assert all(a == ta), f"{a}, expected {ta}"
+    assert all(b == tb), f"{b}, expected {tb}"
 
 @skipIf(not numpy, "Cannot import Numpy numerical library")
 @with_setup(None, teardown_func)
@@ -75,9 +75,9 @@ def test_numpy_copy():
     creator.create(CNAME, numpy.ndarray)
     a = creator.__dict__[CNAME]([1,2,3,4])
     b = creator.__dict__[CNAME]([5,6,7,8])
-    
+
     a[1:3], b[1:3] = b[1:3].copy(), a[1:3].copy()
     ta = numpy.array([1,6,7,4])
     tb = numpy.array([5,2,3,8])
-    assert all(a == ta), "%s, expected %s" % (a, ta)
-    assert all(b == tb), "%s, expected %s" % (b, tb)
+    assert all(a == ta), f"{a}, expected {ta}"
+    assert all(b == tb), f"{b}, expected {tb}"

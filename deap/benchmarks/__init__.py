@@ -582,12 +582,12 @@ def dtlz5(ind, n_objs):
     From: K. Deb, L. Thiele, M. Laumanns and E. Zitzler. Scalable Multi-Objective
     Optimization Test Problems. CEC 2002, p. 825-830, IEEE Press, 2002.
     """
-    g = lambda x: sum([(a - 0.5)**2 for a in x])
+    g = lambda x: sum((a - 0.5)**2 for a in x)
     gval = g(ind[n_objs-1:])
-    
+
     theta = lambda x: pi / (4.0 * (1 + gval)) * (1 + 2 * gval * x)
     fit = [(1 + gval) * cos(pi / 2.0 * ind[0]) * reduce(lambda x,y: x*y, [cos(theta(a)) for a in ind[1:]])]
-           
+
     for m in reversed(range(1, n_objs)):
         if m == 1:
             fit.append((1 + gval) * sin(pi / 2.0 * ind[0]))
@@ -602,9 +602,9 @@ def dtlz6(ind, n_objs):
     From: K. Deb, L. Thiele, M. Laumanns and E. Zitzler. Scalable Multi-Objective
     Optimization Test Problems. CEC 2002, p. 825-830, IEEE Press, 2002.
     """
-    gval = sum([a**0.1 for a in ind[n_objs-1:]])
+    gval = sum(a**0.1 for a in ind[n_objs-1:])
     theta = lambda x: pi / (4.0 * (1 + gval)) * (1 + 2 * gval * x)
-    
+
     fit = [(1 + gval) * cos(pi / 2.0 * ind[0]) *
            reduce(lambda x,y: x*y, [cos(theta(a)) for a in ind[1:]])]
 
@@ -622,9 +622,18 @@ def dtlz7(ind, n_objs):
     From: K. Deb, L. Thiele, M. Laumanns and E. Zitzler. Scalable Multi-Objective
     Optimization Test Problems. CEC 2002, p. 825-830, IEEE Press, 2002.
     """
-    gval = 1 + 9.0 / len(ind[n_objs-1:]) * sum([a for a in ind[n_objs-1:]])
-    fit = [ind for ind in ind[:n_objs-1]]
-    fit.append((1 + gval) * (n_objs - sum([a / (1.0 + gval) * (1 + sin(3 * pi * a)) for a in ind[:n_objs-1]])))
+    gval = 1 + 9.0 / len(ind[n_objs-1:]) * sum(list(ind[n_objs-1:]))
+    fit = list(ind[:n_objs-1])
+    fit.append(
+        (1 + gval)
+        * (
+            n_objs
+            - sum(
+                a / (1.0 + gval) * (1 + sin(3 * pi * a))
+                for a in ind[: n_objs - 1]
+            )
+        )
+    )
     return fit
 
 def fonseca(individual):

@@ -232,10 +232,7 @@ class MultiStatistics(dict):
         
         :param data: Sequence of objects on which the statistics are computed.
         """
-        record = {}
-        for name, stats in self.items():
-            record[name] = stats.compile(data)
-        return record
+        return {name: stats.compile(data) for name, stats in self.items()}
 
     @property
     def fields(self):
@@ -453,7 +450,7 @@ class Logbook(list):
             nlines = 1
             if len(self.chapters) > 0:
                 nlines += max(map(len, chapters_txt.values())) - len(self) + 1
-            header = [[] for i in xrange(nlines)]
+            header = [[] for _ in xrange(nlines)]
             for j, name in enumerate(columns):
                 if name in chapters_txt:
                     length = max(len(line.expandtabs()) for line in chapters_txt[name])
@@ -472,9 +469,7 @@ class Logbook(list):
             str_matrix = chain(header, str_matrix)
 
         template = "\t".join("{%i:<%i}" % (i, l) for i, l in enumerate(self.columns_len))
-        text = [template.format(*line) for line in str_matrix]
-
-        return text
+        return [template.format(*line) for line in str_matrix]
 
     def __str__(self, startindex=0):
         text = self.__txt__(startindex)
@@ -504,8 +499,8 @@ class HallOfFame(object):
     """
     def __init__(self, maxsize, similar=eq):
         self.maxsize = maxsize
-        self.keys = list()
-        self.items = list()
+        self.keys = []
+        self.items = []
         self.similar = similar
     
     def update(self, population):

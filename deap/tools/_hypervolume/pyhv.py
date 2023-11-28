@@ -248,10 +248,7 @@ class _MultiList:
                 currentList.append(str(node))
                 node = node.next[i]
             strings.append(str(currentList))
-        stringRepr = ""
-        for string in strings:
-            stringRepr += string + "\n"
-        return stringRepr
+        return "".join(string + "\n" for string in strings)
     
     
     def __len__(self):
@@ -292,15 +289,14 @@ class _MultiList:
             lastButOne.next[index] = node
         
         
-    def remove(self, node, index, bounds): 
+    def remove(self, node, index, bounds):
         """Removes and returns 'node' from all lists in [0, 'index'[."""
         for i in xrange(index): 
             predecessor = node.prev[i]
             successor = node.next[i]
             predecessor.next[i] = successor
-            successor.prev[i] = predecessor  
-            if bounds[i] > node.cargo[i]:
-                bounds[i] = node.cargo[i]
+            successor.prev[i] = predecessor
+            bounds[i] = min(bounds[i], node.cargo[i])
         return node
     
     
@@ -314,8 +310,7 @@ class _MultiList:
         for i in xrange(index):
             node.prev[i].next[i] = node
             node.next[i].prev[i] = node
-            if bounds[i] > node.cargo[i]:
-                bounds[i] = node.cargo[i]
+            bounds[i] = min(bounds[i], node.cargo[i])
             
 __all__ = ["hypervolume_kmax", "hypervolume"]
 

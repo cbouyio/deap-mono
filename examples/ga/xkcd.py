@@ -15,6 +15,7 @@
 """This example shows a possible answer to a problem that can be found in this
 xkcd comics: http://xkcd.com/287/. In the comic, the characters want to get
 exactly 15.05$ worth of appetizers, as fast as possible."""
+
 import random
 from operator import attrgetter
 from collections import Counter
@@ -38,7 +39,10 @@ IND_INIT_SIZE = 3
 # each menu item, random was called to generate a time.
 ITEMS_NAME = "Mixed Fruit", "French Fries", "Side Salad", "Hot Wings", "Mozzarella Sticks", "Sampler Plate"
 ITEMS_PRICE = 2.15, 2.75, 3.35, 3.55, 4.2, 5.8
-ITEMS = dict((name, (price, random.uniform(1, 5))) for name, price in zip(ITEMS_NAME, ITEMS_PRICE))
+ITEMS = {
+    name: (price, random.uniform(1, 5))
+    for name, price in zip(ITEMS_NAME, ITEMS_PRICE)
+}
 
 creator.create("Fitness", base.Fitness, weights=(-1.0, -1.0))
 creator.create("Individual", Counter, fitness=creator.Fitness)
@@ -52,7 +56,7 @@ def evalXKCD(individual, target_price):
     """Evaluates the fitness and return the error on the price and the time
     taken by the order if the chef can cook everything in parallel."""
     price = 0.0
-    times = list()
+    times = []
     for item, number in individual.items():
         price += ITEMS[item][0] * number
         times.append(ITEMS[item][1])

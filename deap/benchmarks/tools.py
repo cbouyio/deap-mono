@@ -132,13 +132,14 @@ class noise(object):
         @wraps(func)
         def wrapper(individual, *args, **kargs):
             result = func(individual, *args, **kargs)
-            noisy = list()
+            noisy = []
             for r, f in zip(result, self.rand_funcs):
                 if f is None:
                     noisy.append(r)
                 else:
                     noisy.append(r + f())
             return tuple(noisy)
+
         wrapper.noise = self.noise
         return wrapper
     
@@ -265,8 +266,7 @@ def diversity(first_front, first, last):
 
     dm = sum(dt)/len(dt)
     di = sum(abs(d_i - dm) for d_i in dt)
-    delta = (df + dl + di)/(df + dl + len(dt) * dm )
-    return delta
+    return (df + dl + di)/(df + dl + len(dt) * dm )
 
 def convergence(first_front, optimal_front):
     """Given a Pareto front `first_front` and the optimal Pareto front, 

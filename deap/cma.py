@@ -127,14 +127,14 @@ class Strategy(object):
         population.sort(key=lambda ind: ind.fitness, reverse=True)
 
         old_centroid = self.centroid
-        self.centroid = numpy.dot(self.weights, population[0:self.mu])
+        self.centroid = numpy.dot(self.weights, population[:self.mu])
 
         c_diff = self.centroid - old_centroid
 
         # Cumulation : update evolution path
         self.ps = (1 - self.cs) * self.ps \
-            + sqrt(self.cs * (2 - self.cs) * self.mueff) / self.sigma \
-            * numpy.dot(self.B, (1. / self.diagD)
+                + sqrt(self.cs * (2 - self.cs) * self.mueff) / self.sigma \
+                * numpy.dot(self.B, (1. / self.diagD)
                         * numpy.dot(self.B.T, c_diff))
 
         hsig = float((numpy.linalg.norm(self.ps) /
@@ -144,16 +144,16 @@ class Strategy(object):
         self.update_count += 1
 
         self.pc = (1 - self.cc) * self.pc + hsig \
-            * sqrt(self.cc * (2 - self.cc) * self.mueff) / self.sigma \
-            * c_diff
+                * sqrt(self.cc * (2 - self.cc) * self.mueff) / self.sigma \
+                * c_diff
 
         # Update covariance matrix
-        artmp = population[0:self.mu] - old_centroid
+        artmp = population[:self.mu] - old_centroid
         self.C = (1 - self.ccov1 - self.ccovmu + (1 - hsig)
                   * self.ccov1 * self.cc * (2 - self.cc)) * self.C \
-            + self.ccov1 * numpy.outer(self.pc, self.pc) \
-            + self.ccovmu * numpy.dot((self.weights * artmp.T), artmp) \
-            / self.sigma ** 2
+                + self.ccov1 * numpy.outer(self.pc, self.pc) \
+                + self.ccovmu * numpy.dot((self.weights * artmp.T), artmp) \
+                / self.sigma ** 2
 
         self.sigma *= numpy.exp((numpy.linalg.norm(self.ps) / self.chiN - 1.)
                                 * self.cs / self.damps)
@@ -177,13 +177,13 @@ class Strategy(object):
         rweights = params.get("weights", "superlinear")
         if rweights == "superlinear":
             self.weights = log(self.mu + 0.5) - \
-                numpy.log(numpy.arange(1, self.mu + 1))
+                    numpy.log(numpy.arange(1, self.mu + 1))
         elif rweights == "linear":
             self.weights = self.mu + 0.5 - numpy.arange(1, self.mu + 1)
         elif rweights == "equal":
             self.weights = numpy.ones(self.mu)
         else:
-            raise RuntimeError("Unknown weights : %s" % rweights)
+            raise RuntimeError(f"Unknown weights : {rweights}")
 
         self.weights /= sum(self.weights)
         self.mueff = 1. / sum(self.weights ** 2)
@@ -396,7 +396,7 @@ class StrategyMultiObjective(object):
                   of its parent.
         """
         arz = numpy.random.randn(self.lambda_, self.dim)
-        individuals = list()
+        individuals = []
 
         # Make sure every parent has a parent tag and index
         for i, p in enumerate(self.parents):
@@ -426,9 +426,9 @@ class StrategyMultiObjective(object):
 
         pareto_fronts = tools.sortLogNondominated(candidates, len(candidates))
 
-        chosen = list()
+        chosen = []
         mid_front = None
-        not_chosen = list()
+        not_chosen = []
 
         # Fill the next population (chosen) with the fronts until there is not enouch space
         # When an entire front does not fit in the space left we rely on the hypervolume
@@ -453,7 +453,7 @@ class StrategyMultiObjective(object):
             ref = numpy.array([ind.fitness.wvalues for ind in candidates]) * -1
             ref = numpy.max(ref, axis=0) + 1
 
-            for i in range(len(mid_front) - k):
+            for _ in range(len(mid_front) - k):
                 idx = self.indicator(mid_front, ref=ref)
                 not_chosen.append(mid_front.pop(idx))
 

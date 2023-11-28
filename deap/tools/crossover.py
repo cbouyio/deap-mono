@@ -271,7 +271,7 @@ def cxBlend(ind1, ind2, alpha):
     return ind1, ind2
 
 def cxSimulatedBinary(ind1, ind2, eta):
-    """Executes a simulated binary crossover that modify in-place the input
+  """Executes a simulated binary crossover that modify in-place the input
     individuals. The simulated binary crossover expects :term:`sequence`
     individuals of floating point numbers.
 
@@ -285,17 +285,14 @@ def cxSimulatedBinary(ind1, ind2, eta):
     This function uses the :func:`~random.random` function from the python base
     :mod:`random` module.
     """
-    for i, (x1, x2) in enumerate(zip(ind1, ind2)):
-        rand = random.random()
-        if rand <= 0.5:
-            beta = 2. * rand
-        else:
-            beta = 1. / (2. * (1. - rand))
-        beta **= 1. / (eta + 1.)
-        ind1[i] = 0.5 * (((1 + beta) * x1) + ((1 - beta) * x2))
-        ind2[i] = 0.5 * (((1 - beta) * x1) + ((1 + beta) * x2))
+  for i, (x1, x2) in enumerate(zip(ind1, ind2)):
+    rand = random.random()
+    beta = 2. * rand if rand <= 0.5 else 1. / (2. * (1. - rand))
+    beta **= 1. / (eta + 1.)
+    ind1[i] = 0.5 * (((1 + beta) * x1) + ((1 - beta) * x2))
+    ind2[i] = 0.5 * (((1 - beta) * x1) + ((1 + beta) * x2))
 
-    return ind1, ind2
+  return ind1, ind2
 
 
 def cxSimulatedBinaryBounded(ind1, ind2, eta, low, up):
@@ -460,10 +457,20 @@ def cxESTwoPoints(ind1, ind2):
     return cxESTwoPoints(ind1, ind2)
 
 # List of exported function names.
-__all__ = ['cxTwoPointMono', 'cxOnePoint', 'cxTwoPoint', 'cxUniform', 'cxPartialyMatched',
-           'cxUniformPartialyMatched', 'cxOrdered', 'cxBlend',
-           'cxSimulatedBinary','cxSimulatedBinaryBounded', 'cxMessyOnePoint',
-           'cxESBlend', 'cxESTwoPoint']
-
-# Deprecated functions
-__all__.extend(['cxTwoPoints', 'cxESTwoPoints'])
+__all__ = [
+    'cxTwoPointMono',
+    'cxOnePoint',
+    'cxTwoPoint',
+    'cxUniform',
+    'cxPartialyMatched',
+    'cxUniformPartialyMatched',
+    'cxOrdered',
+    'cxBlend',
+    'cxSimulatedBinary',
+    'cxSimulatedBinaryBounded',
+    'cxMessyOnePoint',
+    'cxESBlend',
+    'cxESTwoPoint',
+    'cxTwoPoints',
+    'cxESTwoPoints',
+]
