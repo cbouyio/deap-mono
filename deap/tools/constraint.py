@@ -34,10 +34,7 @@ class DeltaPenality(object):
     """
     def __init__(self, feasibility, delta, distance=None):
         self.fbty_fct = feasibility
-        if not isinstance(delta, Sequence):
-            self.delta = repeat(delta)
-        else:
-            self.delta = delta
+        self.delta = repeat(delta) if not isinstance(delta, Sequence) else delta
         self.dist_fct = distance
 
     def __call__(self, func):
@@ -146,9 +143,7 @@ if __name__ == "__main__":
 
     def valid(individual):
         """Determines if the individual is valid or not."""
-        if any(individual < MIN_BOUND) or any(individual > MAX_BOUND):
-            return False
-        return True
+        return not any(individual < MIN_BOUND) and not any(individual > MAX_BOUND)
 
     toolbox = base.Toolbox()
     toolbox.register("evaluate", benchmarks.zdt2)

@@ -40,18 +40,12 @@ def bin2float(min_, max_, nbits):
 def trap(individual):
     u = sum(individual)
     k = len(individual)
-    if u == k:
-        return k
-    else:
-        return k - 1 - u
+    return k if u == k else k - 1 - u
 
 def inv_trap(individual):
     u = sum(individual)
     k = len(individual)
-    if u == 0:
-        return k
-    else:
-        return u - 1
+    return k if u == 0 else u - 1
 
 def chuang_f1(individual):
     """Binary deceptive function from : Multivariate Multi-Model Approach for
@@ -118,7 +112,7 @@ def royal_road1(individual, order):
     total = 0
     for i in xrange(nelem):
         value = int("".join(map(str, individual[i*order:i*order+order])), 2)
-        total += int(order) * int(value/max_value)
+        total += int(order) * (value // max_value)
     return total,
 
 def royal_road2(individual, order):
@@ -127,7 +121,7 @@ def royal_road2(individual, order):
     """
     total = 0
     norder = order
-    while norder < order**2:
+    while norder < norder**2:
         total += royal_road1(norder, individual)[0]
         norder *= 2
     return total,

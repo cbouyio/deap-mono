@@ -46,7 +46,7 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 def evalTSP(individual):
     distance = distance_map[individual[-1]][individual[0]]
-    for gene1, gene2 in zip(individual[0:-1], individual[1:]):
+    for gene1, gene2 in zip(individual[:-1], individual[1:]):
         distance += distance_map[gene1][gene2]
     return distance,
 

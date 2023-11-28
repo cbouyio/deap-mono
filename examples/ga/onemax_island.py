@@ -60,16 +60,10 @@ def migPipe(deme, k, pipein, pipeout, selection, replacement=None):
                         that leave the population are directly replaced.
     """
     emigrants = selection(deme, k)
-    if replacement is None:
-        # If no replacement strategy is selected, replace those who migrate
-        immigrants = emigrants
-    else:
-        # Else select those who will be replaced
-        immigrants = replacement(deme, k)
-    
+    immigrants = emigrants if replacement is None else replacement(deme, k)
     pipeout.send(emigrants)
     buf = pipein.recv()
-    
+
     for place, immigrant in zip(immigrants, buf):
         indx = deme.index(place)
         deme[indx] = immigrant

@@ -64,7 +64,7 @@ def main(verbose=True):
     stats.register("std", numpy.std)
     stats.register("min", numpy.min)
     stats.register("max", numpy.max)
-    
+
     logbook = tools.Logbook()
     logbook.header = "gen", "evals", "error", "offline_error", "avg", "max"
 
@@ -72,7 +72,7 @@ def main(verbose=True):
     populations = [toolbox.population(n=regular + brownian) for _ in range(NPOP)]
 
     # Evaluate the individuals
-    for idx, subpop in enumerate(populations):
+    for subpop in populations:
         fitnesses = toolbox.map(toolbox.evaluate, subpop)
         for ind, fit in zip(subpop, fitnesses):
             ind.fitness.values = fit
@@ -99,13 +99,9 @@ def main(verbose=True):
                 d = math.sqrt(d)
 
                 if d < rexcl:
-                    if bests[i].fitness < bests[j].fitness:
-                        k = i
-                    else:
-                        k = j
-
+                    k = i if bests[i].fitness < bests[j].fitness else j
                     populations[k] = toolbox.population(n=regular + brownian)
-        
+
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in itertools.chain(*populations) if not ind.fitness.valid]
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)

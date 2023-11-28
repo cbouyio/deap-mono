@@ -50,9 +50,7 @@ def closest_feasible(individual):
 
 def valid(individual):
     """Determines if the individual is valid or not."""
-    if any(individual < MIN_BOUND) or any(individual > MAX_BOUND):
-        return False
-    return True
+    return not any(individual < MIN_BOUND) and not any(individual > MAX_BOUND)
 
 toolbox = base.Toolbox()
 toolbox.register("evaluate", benchmarks.zdt1)

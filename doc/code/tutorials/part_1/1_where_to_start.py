@@ -34,7 +34,7 @@ def main():
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
 
-    for g in range(NGEN):
+    for _ in range(NGEN):
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
         # Clone the selected individuals

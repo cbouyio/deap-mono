@@ -32,7 +32,7 @@ for ind, fit in zip(pop, fitnesses):
 
 from deap import algorithms
 
-for g in range(NGEN):
+for _ in range(NGEN):
     # Select and clone the next generation individuals
     offspring = map(toolbox.clone, toolbox.select(pop, len(pop)))
 

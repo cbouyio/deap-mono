@@ -128,9 +128,9 @@ class AntSimulator(object):
             routine()
     
     def parse_matrix(self, matrix):
-        self.matrix = list()
+        self.matrix = []
         for i, line in enumerate(matrix):
-            self.matrix.append(list())
+            self.matrix.append([])
             for j, col in enumerate(line):
                 if col == "#":
                     self.matrix[-1].append("food")

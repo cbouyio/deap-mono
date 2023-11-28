@@ -37,7 +37,7 @@ class KNN(object):
             features = numpy.ones(self.data.shape[1])
         else:
             features = numpy.array(features)
-        
+
         if data.ndim == 1:
             dist = self.data - data
         elif data.ndim == 2:
@@ -51,20 +51,20 @@ class KNN(object):
         dist = numpy.sum(dist, -1)
         dist = numpy.sqrt(dist)
         nns = numpy.argsort(dist)
-        
+
         if data.ndim == 1:
-            classes = dict((cls, 0) for cls in self.classes)
+            classes = {cls: 0 for cls in self.classes}
             for n in nns[:self.k]:
                 classes[self.labels[n]] += 1
             labels = sorted(classes.items(), key=operator.itemgetter(1))[-1][0]
         elif data.ndim == 2:
-            labels = list()
+            labels = []
             for i, d in enumerate(data):
-                classes = dict((cls, 0) for cls in self.classes)
+                classes = {cls: 0 for cls in self.classes}
                 for n in nns[i, :self.k]:
                     classes[self.labels[n]] += 1
                 labels.append(sorted(classes.items(), key=operator.itemgetter(1))[-1][0])
-        
+
         return labels
 
 # Create a default internal KNN object
@@ -75,9 +75,9 @@ K=1
 
 with open(FILE, "r") as data_csv:
     data = csv.reader(data_csv)
-    trainset = list()
-    trainlabels = list()
-    rows = [row for row in data]
+    trainset = []
+    trainlabels = []
+    rows = list(data)
 
 random.shuffle(rows)
 for row in rows:

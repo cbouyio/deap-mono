@@ -94,7 +94,7 @@ class PrimitiveTree(list):
             while len(stack[-1][1]) == stack[-1][0].arity:
                 prim, args = stack.pop()
                 string = prim.format(*args)
-                if len(stack) == 0:
+                if not stack:
                     break   # If stack is empty, all nodes should have been seen
                 stack[-1][1].append(string)
 
@@ -116,18 +116,14 @@ class PrimitiveTree(list):
         for token in tokens:
             if token == '':
                 continue
-            if len(ret_types) != 0:
-                type_ = ret_types.popleft()
-            else:
-                type_ = None
-
+            type_ = ret_types.popleft() if len(ret_types) != 0 else None
             if token in pset.mapping:
                 primitive = pset.mapping[token]
 
                 if type_ is not None and not issubclass(primitive.ret, type_):
-                    raise TypeError("Primitive {} return type {} does not "
-                                    "match the expected one: {}."
-                                    .format(primitive, primitive.ret, type_))
+                    raise TypeError(
+                        f"Primitive {primitive} return type {primitive.ret} does not match the expected one: {type_}."
+                    )
 
                 expr.append(primitive)
                 if isinstance(primitive, Primitive):
@@ -136,15 +132,15 @@ class PrimitiveTree(list):
                 try:
                     token = eval(token)
                 except NameError:
-                    raise TypeError("Unable to evaluate terminal: {}.".format(token))
+                    raise TypeError(f"Unable to evaluate terminal: {token}.")
 
                 if type_ is None:
                     type_ = type(token)
 
                 if not issubclass(type(token), type_):
-                    raise TypeError("Terminal {} type {} does not "
-                                    "match the expected one: {}."
-                                    .format(token, type(token), type_))
+                    raise TypeError(
+                        f"Terminal {token} type {type(token)} does not match the expected one: {type_}."
+                    )
 
                 expr.append(Terminal(token, False, type_))
         return cls(expr)
@@ -293,12 +289,12 @@ class PrimitiveSetTyped(object):
 
     def _add(self, prim):
         def addType(dict_, ret_type):
-            if not ret_type in dict_:
+            if ret_type not in dict_:
                 new_list = []
                 for type_, list_ in dict_.items():
                     if issubclass(type_, ret_type):
                         for item in list_:
-                            if not item in new_list:
+                            if item not in new_list:
                                 new_list.append(item)
                 dict_[ret_type] = new_list
 
@@ -354,15 +350,14 @@ class PrimitiveSetTyped(object):
         :param ret_type: Type of the terminal.
         :param name: defines the name of the terminal in the expression.
         """
-        symbolic = False
         if name is None and callable(terminal):
             name = terminal.__name__
 
-        assert name not in self.context, \
-            "Terminals are required to have a unique name. " \
-            "Consider using the argument 'name' to rename your "\
-            "second %s terminal." % (name,)
+        assert (
+            name not in self.context
+        ), f"Terminals are required to have a unique name. Consider using the argument 'name' to rename your second {name} terminal."
 
+        symbolic = False
         if name is not None:
             self.context[name] = terminal
             terminal = name
@@ -386,7 +381,7 @@ class PrimitiveSetTyped(object):
         :param ret_type: type of the object returned by *ephemeral*.
         """
         module_gp = globals()
-        if not name in module_gp:
+        if name not in module_gp:
             class_ = type(name, (Ephemeral,), {'func': staticmethod(ephemeral),
                                                'ret': ret_type})
             module_gp[name] = class_
@@ -468,7 +463,7 @@ def compile(expr, pset):
     if len(pset.arguments) > 0:
         # This section is a stripped version of the lambdify
         # function of SymPy 0.6.6.
-        args = ",".join(arg for arg in pset.arguments)
+        args = ",".join(pset.arguments)
         code = "lambda {args}: {code}".format(args=args, code=code)
     try:
         return eval(code, pset.context, {})
@@ -503,7 +498,7 @@ def compileADF(expr, psets):
     for pset, subexpr in reversed(zip(psets, expr)):
         pset.context.update(adfdict)
         func = compile(subexpr, pset)
-        adfdict.update({pset.name: func})
+        adfdict[pset.name] = func
     return func
 
 
@@ -595,19 +590,21 @@ def generate(pset, min_, max_, condition, type_=None):
     """
     if type_ is None:
         type_ = pset.ret
-    expr = []
     height = random.randint(min_, max_)
     stack = [(0, type_)]
-    while len(stack) != 0:
+    expr = []
+    while stack:
         depth, type_ = stack.pop()
         if condition(height, depth):
             try:
                 term = random.choice(pset.terminals[type_])
             except IndexError:
                 _, _, traceback = sys.exc_info()
-                raise IndexError, "The gp.generate function tried to add "\
-                                  "a terminal of type '%s', but there is "\
-                                  "none available." % (type_,), traceback
+                raise (
+                    IndexError,
+                    f"The gp.generate function tried to add a terminal of type '{type_}', but there is none available.",
+                    traceback,
+                )
             if isclass(term):
                 term = term()
             expr.append(term)
@@ -616,12 +613,13 @@ def generate(pset, min_, max_, condition, type_=None):
                 prim = random.choice(pset.primitives[type_])
             except IndexError:
                 _, _, traceback = sys.exc_info()
-                raise IndexError, "The gp.generate function tried to add "\
-                                  "a primitive of type '%s', but there is "\
-                                  "none available." % (type_,), traceback
+                raise (
+                    IndexError,
+                    f"The gp.generate function tried to add a primitive of type '{type_}', but there is none available.",
+                    traceback,
+                )
             expr.append(prim)
-            for arg in reversed(prim.args):
-                stack.append((depth + 1, arg))
+            stack.extend((depth + 1, arg) for arg in reversed(prim.args))
     return expr
 
 
@@ -709,9 +707,7 @@ def cxOnePointLeafBiased(ind1, ind2, termpb):
         if arity_op2(node.arity):
             types2[node.ret].append(idx)
 
-    common_types = set(types1.keys()).intersection(set(types2.keys()))
-
-    if len(common_types) > 0:
+    if common_types := set(types1.keys()).intersection(set(types2.keys())):
         # Set does not support indexing
         type_ = random.sample(common_types, 1)[0]
         index1 = random.choice(types1[type_])
@@ -784,11 +780,11 @@ def mutEphemeral(individual, mode):
     if mode not in ["one", "all"]:
         raise ValueError("Mode must be one of \"one\" or \"all\"")
 
-    ephemerals_idx = [index
-                      for index, node in enumerate(individual)
-                      if isinstance(node, Ephemeral)]
-
-    if len(ephemerals_idx) > 0:
+    if ephemerals_idx := [
+        index
+        for index, node in enumerate(individual)
+        if isinstance(node, Ephemeral)
+    ]:
         if mode == "one":
             ephemerals_idx = (random.choice(ephemerals_idx),)
 
@@ -818,7 +814,7 @@ def mutInsert(individual, pset):
     # it must accept the return value of the current node
     primitives = [p for p in pset.primitives[node.ret] if node.ret in p.args]
 
-    if len(primitives) == 0:
+    if not primitives:
         return individual,
 
     new_node = choice(primitives)
@@ -849,12 +845,11 @@ def mutShrink(individual):
     if len(individual) < 3 or individual.height <= 1:
         return individual,
 
-    iprims = []
-    for i, node in enumerate(individual[1:], 1):
-        if isinstance(node, Primitive) and node.ret in node.args:
-            iprims.append((i, node))
-
-    if len(iprims) != 0:
+    if iprims := [
+        (i, node)
+        for i, node in enumerate(individual[1:], 1)
+        if isinstance(node, Primitive) and node.ret in node.args
+    ]:
         index, prim = random.choice(iprims)
         arg_idx = random.choice([i for i, type_ in enumerate(prim.args) if type_ == prim.ret])
         rindex = index + 1
@@ -1166,7 +1161,7 @@ def graph(expr):
        out of order when using `NetworX <http://networkx.github.com/>`_.
     """
     nodes = range(len(expr))
-    edges = list()
+    edges = []
     labels = dict()
 
     stack = []

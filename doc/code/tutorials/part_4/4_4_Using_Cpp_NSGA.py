@@ -34,7 +34,7 @@ def genWire(dimension):
     
 def genNetwork(dimension, min_size, max_size):
     size = random.randint(min_size, max_size)
-    return [genWire(dimension) for i in xrange(size)]
+    return [genWire(dimension) for _ in xrange(size)]
     
 def mutWire(individual, dimension, indpb):
     for index, elem in enumerate(individual):

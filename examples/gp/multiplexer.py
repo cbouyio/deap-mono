@@ -34,7 +34,7 @@ MUX_IN_LINES = 2 ** MUX_SELECT_LINES
 MUX_TOTAL_LINES = MUX_SELECT_LINES + MUX_IN_LINES
 
 # input : [A0 A1 A2 D0 D1 D2 D3 D4 D5 D6 D7] for a 8-3 mux
-inputs = [[0] * MUX_TOTAL_LINES for i in range(2 ** MUX_TOTAL_LINES)]
+inputs = [[0] * MUX_TOTAL_LINES for _ in range(2 ** MUX_TOTAL_LINES)]
 outputs = [None] * (2 ** MUX_TOTAL_LINES)
 
 for i in range(2 ** MUX_TOTAL_LINES):
@@ -46,11 +46,10 @@ for i in range(2 ** MUX_TOTAL_LINES):
         if value >= divisor:
             inputs[i][j] = 1
             value -= divisor
-    
-    # Determine the corresponding output
-    indexOutput = MUX_SELECT_LINES
-    for j, k in enumerate(inputs[i][:MUX_SELECT_LINES]):
-        indexOutput += k * 2**j
+
+    indexOutput = MUX_SELECT_LINES + sum(
+        k * 2**j for j, k in enumerate(inputs[i][:MUX_SELECT_LINES])
+    )
     outputs[i] = inputs[i][indexOutput]
 
 pset = gp.PrimitiveSet("MAIN", MUX_TOTAL_LINES, "IN")
